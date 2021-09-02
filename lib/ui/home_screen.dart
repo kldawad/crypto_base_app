@@ -1,5 +1,9 @@
 import 'package:ctypto_base_app/network/api.dart';
+import 'package:ctypto_base_app/view_model/coin_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+// model classes automatically Map the data we are getting into some variables which we will define in our model classes
 
 NetworkHelper networkHelper = NetworkHelper();
 
@@ -9,20 +13,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List? coinData;
-  Future getCoinData() async {
-    var getData = await networkHelper.coinData();
-    setState(() {
-      coinData = getData;
-    });
-  }
+  final coinController = Get.put(CoinViewModel());
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getCoinData();
-  }
+  // List? coinData;
+  // Future getCoinData() async {
+  //   var getData = await networkHelper.coinData();
+  //   setState(() {
+  //     coinData = getData;
+  //   });
+  // }
+  //
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   getCoinData();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: coinData == null
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: 5,
+      body: GetX<CoinViewModel>(
+        builder: (controller) {
+          return ListView.builder(
+              itemCount: controller.coinView.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 return Padding(
@@ -96,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Image.network(
-                                  'https://png.pngtree.com/png-vector/20190419/ourmid/pngtree-vector-diamond-icon-png-image_956688.jpg'),
+                                  '${controller.coinView[index].image}'),
                             ),
                           ),
                         ),
@@ -107,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  coinData![index]['name'],
+                                  controller.coinView[index].name,
                                   style: TextStyle(
                                     color: Colors.grey[900],
                                     fontSize: 25,
@@ -115,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'btc',
+                                  '${controller.coinView[index].symbol}',
                                   style: TextStyle(
                                     color: Colors.grey[900],
                                     fontSize: 20,
@@ -132,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '65626.0',
+                                '${controller.coinView[index].currentPrice}',
                                 style: TextStyle(
                                   color: Colors.grey[900],
                                   fontSize: 20,
@@ -140,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               Text(
-                                '65626.0',
+                                '${controller.coinView[index].priceChange24H}',
                                 style: TextStyle(
                                   color: Colors.green,
                                   fontSize: 18,
@@ -148,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               Text(
-                                '65626.0',
+                                '${controller.coinView[index].priceChangePercentage24H}',
                                 style: TextStyle(
                                   color: Colors.green,
                                   fontSize: 18,
@@ -162,7 +166,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 );
-              }),
+              });
+        },
+      ),
     );
   }
 }
+
+// GetX<CoinViewModel>(
+//               builder: (controller) {
+//                 return
+
+// coinData![index].name,
+
+// itemCount: coinData!.length,
+
+// coinData == null
+// ? Center(
+// child: CircularProgressIndicator(),
+// )
+// :

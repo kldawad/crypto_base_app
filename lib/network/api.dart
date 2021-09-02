@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:developer';
-
-import 'package:ctypto_base_app/model/coin_model.dart';
 import 'package:ctypto_base_app/utils/constans.dart';
 import 'package:http/http.dart' as http;
+import 'package:ctypto_base_app/model/coin_model_2.dart';
 
 class NetworkHelper {
   Future coinData() async {
@@ -15,14 +13,18 @@ class NetworkHelper {
       http.Response response = await http.get(uri);
       log(response.body);
       if (response.statusCode == 200) {
-        List<CoinModel> coinModel = coinModelFromJson(response.body);
-        log('coinModel : ${coinModel.length}');
-        return jsonDecode(response.body);
+        // List<CoinModel> coinModel = coinModelFromJson(response.body);
+        // log('coinModel : ${coinModel.length}');
+        List<CoinModel> coinmodel = coinModelFromJson(response.body);
+        print('my error :  ${coinmodel.length}');
+
+        return coinmodel;
       } else {
         print(response.statusCode);
       }
     } catch (e) {
-      log('error : ${e.toString()}');
+      // log('error : ${e.toString()}');
+      print(e);
     }
   }
 }
